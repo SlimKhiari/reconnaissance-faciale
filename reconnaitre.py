@@ -9,7 +9,7 @@ import time
 encodages_des_visages = []
 noms_des_visages = []
 repertoire_courant = os.getcwd() 
-path = os.path.join(repertoire_courant, 'visages_des_employes/')
+path = os.path.join(repertoire_courant, 'faces/')
 liste_des_fichiers = [f for f in glob.glob(path+'*.jpg')]
 nombre_de_fichiers = len(liste_des_fichiers)
 noms = liste_des_fichiers.copy()
