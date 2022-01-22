@@ -63,20 +63,17 @@ nbr_total_personnes_internes = res[0]
 print(nbr_total_personnes_internes)
 
 #initialisation de la presence des pesonnes internes (presence = false)
-#for i in range(nbr_total_personnes_internes):
-#	ajoutPresence = "INSERT INTO presencePersonnesInternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
-#	val = (i,formatted_date,'0')
-#	cursorSel.execute(ajoutPresence, val)
-#	cnx.commit()
+for i in range(nbr_total_personnes_internes):
+	ajoutPresence = "INSERT INTO presencePersonnesInternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
+	val = (i,formatted_date,'0')
+	cursorSel.execute(ajoutPresence, val)
+	cnx.commit()
 
 #mise à jour de la bd dans le cas ou il y a une reconnaissance (exmemple ici: nom_du_visage)
 sql = "UPDATE presencePersonnesInternes SET present_e = %s WHERE date_presence = %s AND idpersonnesInterne = %s "
 value = ("1",formatted_date,id_personne_interne)
 cursorSel.execute(sql,value)
 cnx.commit()
-
-
-
 
 cursorSel.close()
 cnx.close()
