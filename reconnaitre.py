@@ -3,7 +3,51 @@ import cv2
 import numpy as np
 import os
 import glob
-import time 
+import time
+import mysql.connector
+import pymysql
+pymysql.install_as_MySQLdb()
+from mysql.connector import errorcode
+from datetime import datetime 
+
+initialise = 0;
+#date actuelle de l'appel
+now = datetime.now()
+formatted_date = now.strftime('%Y-%m-%d')
+					
+#Initialisation de l'appel (au départ tous le monde est abscent)
+try :
+	cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='gestionnaire_abscence',auth_plugin='mysql_native_password')
+except mysql.connector.Error as err:
+	if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:	print("L'utilsiateur ou le mot de passe n'est pas correct")
+	elif err.errno == errorcode.ER_BAD_DB_ERROR:	print("La base de données n'existe pas")
+	else:	print(err)			
+	exit()
+
+cursorSel = cnx.cursor()
+#nbr total des personnes internes
+query = "SELECT COUNT(*) from personnesInternes" 
+cursorSel.execute(query)            
+res = cursorSel.fetchone()
+nbr_total_personnes_internes = res[0] 
+
+cursorSel.execute("SELECT date_presence FROM presencePersonnesInternes")
+myresult = cursorSel.fetchall()
+
+for row in myresult:
+	a =  " | ".join(row)
+	if a == formatted_date: initialise = 1
+  
+if initialise == 0:
+	#initialisation de la presence des pesonnes internes (presence = false)
+	for i in range(nbr_total_personnes_internes):
+		ajoutPresence = "INSERT INTO presencePersonnesInternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
+		val = (i,formatted_date,'0')
+		cursorSel.execute(ajoutPresence, val)
+		cnx.commit()
+								
+cursorSel.close()
+cnx.close()			
 
 #-----------------------------------------------IMPORTATION DES IMAGES-----------------------------------------------------#
 encodages_des_visages = []
@@ -61,13 +105,64 @@ while True:
 				indice_du_meilleur_visage_correspondant = np.argmin(face_distances)
 				nom_du_visage="refuse(e)"
 				if correspondances[indice_du_meilleur_visage_correspondant ]:
-					print("*************************************************");
-					print("Personne autorisée à entrer dans le batiment.");
-					print("Ouverture automatique des portes, veuillez entrer >");
-					#time.sleep(5)
-					print("Fermeture automatique des portes.");
-					print("*************************************************\n\n");
+					
+					#connexion avec la DB
+					try :
+						cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='gestionnaire_abscence',auth_plugin='mysql_native_password'
+						)
+					except mysql.connector.Error as err:
+						if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+							print("L'utilsiateur ou le mot de passe n'est pas correct")
+						elif err.errno == errorcode.ER_BAD_DB_ERROR:
+							print("La base de données n'existe pas")
+						else:
+							print(err)
+						
+						exit()
+						
+
+					#reconnaitre l'id de la personne détectée
+					string1 = []
+					string2 = []
+					maxboucle=0
+					taille_de_nom_fichier=1
+					id_personne_interne=0
+					cursorSel = cnx.cursor()
 					nom_du_visage = noms_des_visages[indice_du_meilleur_visage_correspondant]
+					
+					selectAction = ("SELECT idpersonnesInternes, nom_du_fichier FROM personnesInternes")
+					cursorSel.execute(selectAction)
+					resultatSelect = cursorSel.fetchall()
+
+					for i in resultatSelect: 
+						for  c in i[1]:
+							string2.append(c) 
+						for  c in nom_du_visage:
+							string1.append(c) 
+						
+						if len(string2) < len(string1) : maxboucle = len(string2)
+						else :  maxboucle = len(string1)
+						
+						for j in  range(maxboucle):
+							if string1[j] == string2[j] : taille_de_nom_fichier = taille_de_nom_fichier+ 1
+
+						if(taille_de_nom_fichier == maxboucle+1): id_personne_interne = i[0];	
+						string1 = []
+						string2 = []
+						maxboucle = 0
+						taille_de_nom_fichier = 1
+
+					print("ID de la personne détéctée : "+str(id_personne_interne))
+
+					#mise à jour de la bd dans le cas ou il y a une reconnaissance (exmemple ici: nom_du_visage)
+					sql = "UPDATE presencePersonnesInternes SET present_e = %s WHERE date_presence = %s AND idpersonnesInterne = %s "
+					value = ("1",formatted_date,id_personne_interne)
+					cursorSel.execute(sql,value)
+					cnx.commit()
+
+					
+					cursorSel.close()
+					cnx.close()
 				else:	
 					print("*************************************************");
 					print("Personne non autorisée à entrer dans le batiment, portes bloquées.");
