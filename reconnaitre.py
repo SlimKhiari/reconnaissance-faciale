@@ -17,7 +17,7 @@ formatted_date = now.strftime('%Y-%m-%d')
 					
 #Initialisation de l'appel (au départ tous le monde est abscent)
 try :
-	cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='gestionnaire_abscence',auth_plugin='mysql_native_password')
+	cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password')
 except mysql.connector.Error as err:
 	if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:	print("L'utilsiateur ou le mot de passe n'est pas correct")
 	elif err.errno == errorcode.ER_BAD_DB_ERROR:	print("La base de données n'existe pas")
@@ -26,12 +26,12 @@ except mysql.connector.Error as err:
 
 cursorSel = cnx.cursor()
 #nbr total des personnes internes
-query = "SELECT COUNT(*) from personnesInternes" 
+query = "SELECT COUNT(*) from personnesinternes" 
 cursorSel.execute(query)            
 res = cursorSel.fetchone()
 nbr_total_personnes_internes = res[0] 
 
-cursorSel.execute("SELECT date_presence FROM presencePersonnesInternes")
+cursorSel.execute("SELECT date_presence FROM presencepersonnesinternes")
 myresult = cursorSel.fetchall()
 
 for row in myresult:
@@ -41,7 +41,7 @@ for row in myresult:
 if initialise == 0:
 	#initialisation de la presence des pesonnes internes (presence = false)
 	for i in range(nbr_total_personnes_internes):
-		ajoutPresence = "INSERT INTO presencePersonnesInternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
+		ajoutPresence = "INSERT INTO presencepersonnesinternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
 		val = (i,formatted_date,'0')
 		cursorSel.execute(ajoutPresence, val)
 		cnx.commit()
@@ -108,7 +108,7 @@ while True:
 					
 					#connexion avec la DB
 					try :
-						cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='gestionnaire_abscence',auth_plugin='mysql_native_password'
+						cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password'
 						)
 					except mysql.connector.Error as err:
 						if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -130,7 +130,7 @@ while True:
 					cursorSel = cnx.cursor()
 					nom_du_visage = noms_des_visages[indice_du_meilleur_visage_correspondant]
 					
-					selectAction = ("SELECT idpersonnesInternes, nom_du_fichier FROM personnesInternes")
+					selectAction = ("SELECT idpersonnesInternes, nom_du_fichier FROM personnesinternes")
 					cursorSel.execute(selectAction)
 					resultatSelect = cursorSel.fetchall()
 
@@ -155,7 +155,7 @@ while True:
 					print("ID de la personne détéctée : "+str(id_personne_interne))
 
 					#mise à jour de la bd dans le cas ou il y a une reconnaissance (exmemple ici: nom_du_visage)
-					sql = "UPDATE presencePersonnesInternes SET present_e = %s WHERE date_presence = %s AND idpersonnesInterne = %s "
+					sql = "UPDATE presencepersonnesinternes SET present_e = %s WHERE date_presence = %s AND idpersonnesInterne = %s "
 					value = ("1",formatted_date,id_personne_interne)
 					cursorSel.execute(sql,value)
 					cnx.commit()
