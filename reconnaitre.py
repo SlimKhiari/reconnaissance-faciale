@@ -9,6 +9,8 @@ import pymysql
 pymysql.install_as_MySQLdb()
 from mysql.connector import errorcode
 from datetime import datetime 
+from pyfirmata import Arduino
+import time
 
 initialise = 0;
 #date actuelle de l'appel
@@ -67,6 +69,9 @@ for i in range(nombre_de_fichiers):
 # création du tableau avec les noms connus
     noms[i] = noms[i].replace(repertoire_courant, "")  
     noms_des_visages.append(noms[i])
+
+#connecter avec le bon port de l'arduino
+board = Arduino('/dev/ttyACM0')
 
 #---------------------------------------------------RECONNAISSANCE DE VISAGE------------------------------------------------#
 emplacements_des_visages = []
@@ -163,11 +168,14 @@ while True:
 					
 					cursorSel.close()
 					cnx.close()
+					board.digital[13].write(1)
+					
 				else:	
 					print("*************************************************");
 					print("Personne non autorisée à entrer dans le batiment, portes bloquées.");
 					print("*************************************************\n\n");
-					#time.sleep(5)
+					board.digital[13].write(0)
+					
 				noms_des_visages_captures.append(nom_du_visage)
 			
 	traiter_ce_cadre = not traiter_ce_cadre
