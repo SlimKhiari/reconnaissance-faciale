@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 07 mars 2022 à 20:02
+-- Généré le : jeu. 17 mars 2022 à 10:58
 -- Version du serveur : 8.0.25
 -- Version de PHP : 7.4.26
 
@@ -149,13 +149,25 @@ DROP TABLE IF EXISTS `visiteur`;
 CREATE TABLE IF NOT EXISTS `visiteur` (
   `ID_v` int NOT NULL,
   `Nom` varchar(50) NOT NULL,
-  `Prénom` varchar(50) NOT NULL,
-  `Téléphone` varchar(20) NOT NULL,
+  `Prenom` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `Telephone` varchar(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Email` varchar(50) NOT NULL,
-  `Pièce_identité` varchar(255) NOT NULL,
+  `Piece_identite` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Motif` varchar(255) NOT NULL,
+  `Date_de_naissance` date DEFAULT NULL,
+  `acceptation` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`ID_v`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `visiteur`
+--
+
+INSERT INTO `visiteur` (`ID_v`, `Nom`, `Prenom`, `Telephone`, `Email`, `Piece_identite`, `Motif`, `Date_de_naissance`, `acceptation`) VALUES
+(1, 'Marouane', 'EL BAROUDI', '0753048719', 'marouaneelbaroudi@gmail.com', 'marouane.png', 'j\'ai un entretien aujourd\'hui', '2000-03-24', 'en attente'),
+(2, 'TALHA', 'ALHASSAN', '0612345678', 'elhassanetalha504@gmail.com', 'talha.png', 'J\'ai oublié mon badge', '1999-01-01', 'en attente'),
+(3, 'Test', 'testo', '0712345678', 'dofus@gmail.com', 'test', 'testo', '2022-03-17', 'accepter'),
+(4, 'marouane', 'mirai', '0712345678', 'marouanelbaroudi@gmail.com', 'pièce d\'identité_Marouane.pdf', 'testo', '2022-03-17', 'Rejeter');
 
 -- --------------------------------------------------------
 
@@ -165,10 +177,17 @@ CREATE TABLE IF NOT EXISTS `visiteur` (
 
 DROP TABLE IF EXISTS `visiteur_accepter`;
 CREATE TABLE IF NOT EXISTS `visiteur_accepter` (
-  `ID_Va` int DEFAULT NULL,
-  `motif` varchar(255) DEFAULT NULL,
+  `ID_Va` int NOT NULL,
+  `Date_Acceptation` datetime NOT NULL,
   KEY `ID_Va` (`ID_Va`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `visiteur_accepter`
+--
+
+INSERT INTO `visiteur_accepter` (`ID_Va`, `Date_Acceptation`) VALUES
+(3, '2022-03-17 10:57:26');
 
 -- --------------------------------------------------------
 
@@ -178,10 +197,17 @@ CREATE TABLE IF NOT EXISTS `visiteur_accepter` (
 
 DROP TABLE IF EXISTS `visiteur_rejeter`;
 CREATE TABLE IF NOT EXISTS `visiteur_rejeter` (
-  `ID_Vr` int DEFAULT NULL,
-  `motif` varchar(255) DEFAULT NULL,
+  `ID_Vr` int NOT NULL,
+  `Date_Rejection` datetime NOT NULL,
   KEY `ID_Vr` (`ID_Vr`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `visiteur_rejeter`
+--
+
+INSERT INTO `visiteur_rejeter` (`ID_Vr`, `Date_Rejection`) VALUES
+(4, '2022-03-17 10:57:32');
 
 --
 -- Contraintes pour les tables déchargées
