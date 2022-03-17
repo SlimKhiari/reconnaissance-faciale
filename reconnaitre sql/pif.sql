@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 17 mars 2022 à 10:58
+-- Généré le : jeu. 17 mars 2022 à 16:09
 -- Version du serveur : 8.0.25
 -- Version de PHP : 7.4.26
 
@@ -147,7 +147,7 @@ INSERT INTO `presencepersonnesinternes` (`idpresencePersonnesInternes`, `idperso
 
 DROP TABLE IF EXISTS `visiteur`;
 CREATE TABLE IF NOT EXISTS `visiteur` (
-  `ID_v` int NOT NULL,
+  `ID_v` int NOT NULL AUTO_INCREMENT,
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Telephone` varchar(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `visiteur` (
   `Date_de_naissance` date DEFAULT NULL,
   `acceptation` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`ID_v`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `visiteur`
@@ -167,7 +167,8 @@ INSERT INTO `visiteur` (`ID_v`, `Nom`, `Prenom`, `Telephone`, `Email`, `Piece_id
 (1, 'Marouane', 'EL BAROUDI', '0753048719', 'marouaneelbaroudi@gmail.com', 'marouane.png', 'j\'ai un entretien aujourd\'hui', '2000-03-24', 'en attente'),
 (2, 'TALHA', 'ALHASSAN', '0612345678', 'elhassanetalha504@gmail.com', 'talha.png', 'J\'ai oublié mon badge', '1999-01-01', 'en attente'),
 (3, 'Test', 'testo', '0712345678', 'dofus@gmail.com', 'test', 'testo', '2022-03-17', 'accepter'),
-(4, 'marouane', 'mirai', '0712345678', 'marouanelbaroudi@gmail.com', 'pièce d\'identité_Marouane.pdf', 'testo', '2022-03-17', 'Rejeter');
+(4, 'marouane', 'mirai', '0712345678', 'marouanelbaroudi@gmail.com', 'pièce d\'identité_Marouane.pdf', 'testo', '2022-03-17', 'Rejeter'),
+(5, 'DOFUS', 'CRA', '0714253698', 'dofus@gmail.com', 'pièce d\'identité_Marouane.pdf', 'J\'ai un entretien aujourd\'hui ', '2022-03-17', 'en attente');
 
 -- --------------------------------------------------------
 
@@ -241,13 +242,13 @@ ALTER TABLE `presencepersonnesinternes`
 -- Contraintes pour la table `visiteur_accepter`
 --
 ALTER TABLE `visiteur_accepter`
-  ADD CONSTRAINT `visiteur_accepter_ibfk_1` FOREIGN KEY (`ID_Va`) REFERENCES `visiteur` (`ID_v`);
+  ADD CONSTRAINT `vi_ac_fk` FOREIGN KEY (`ID_Va`) REFERENCES `visiteur` (`ID_v`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Contraintes pour la table `visiteur_rejeter`
 --
 ALTER TABLE `visiteur_rejeter`
-  ADD CONSTRAINT `visiteur_rejeter_ibfk_1` FOREIGN KEY (`ID_Vr`) REFERENCES `visiteur` (`ID_v`);
+  ADD CONSTRAINT `vi_rj_fk` FOREIGN KEY (`ID_Vr`) REFERENCES `visiteur` (`ID_v`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
