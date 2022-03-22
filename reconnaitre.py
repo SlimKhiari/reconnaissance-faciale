@@ -1,4 +1,4 @@
-#Auteur : Slim Khiari - IATIC 4 - 2020/2021
+#Auteur : Slim Khiari - IATIC 4 - 2021/2022
 
 #-------------------------------------------------------------------------------------------------------#
 #Ce fichier est destiné à la détection et la reconnaissance des peronnes internes au sein d'un établissment.
