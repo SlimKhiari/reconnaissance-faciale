@@ -1,8 +1,9 @@
 #Auteur : Slim Khiari - IATIC 4 - 2020/2021
 
 #-------------------------------------------------------------------------------------------------------#
-#Ce fichier est destiné à la détection, reconnsaissance des peronnes internes au sein d'un établissment.
-#Il gére aussi leurs présences en utilisant une base de données SQL.
+#Ce fichier est destiné à la détection et la reconnaissance des peronnes internes au sein d'un établissment.
+#Il gére aussi leurs présences en utilisant une base de données SQL afin qu'elles puissenr etre visualisée 
+#via notre application web
 #-------------------------------------------------------------------------------------------------------#
 
 import face_recognition
