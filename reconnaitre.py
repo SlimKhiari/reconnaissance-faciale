@@ -1,3 +1,10 @@
+#Auteur : Slim Khiari - IATIC 4 - 2020/2021
+
+#-------------------------------------------------------------------------------------------------------#
+#Ce fichier est destiné à la détection, reconnsaissance des peronnes internes au sein d'un établissment.
+#Il gére aussi leurs présences en utilisant une base de données SQL.
+#-------------------------------------------------------------------------------------------------------#
+
 import face_recognition
 import cv2
 import numpy as np
@@ -12,44 +19,44 @@ from datetime import datetime
 from pyfirmata import Arduino
 import time
 
+#-----------------------------------------------INITIALISATION DE LA PRESENCE POUR L'ENSEMBLE DES PERSONNES INTERNES-----------------------------------------------------#
 initialise = 0;
 #date actuelle de l'appel
-now = datetime.now()
-formatted_date = now.strftime('%Y-%m-%d')
+date_aujourdhui = datetime.now()
+data_aujourdhui_formate = date_aujourdhui.strftime('%Y-%m-%d')
 					
 #Initialisation de l'appel (au départ tous le monde est abscent)
 try :
-	cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password')
-except mysql.connector.Error as err:
-	if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:	print("L'utilsiateur ou le mot de passe n'est pas correct")
-	elif err.errno == errorcode.ER_BAD_DB_ERROR:	print("La base de données n'existe pas")
-	else:	print(err)			
+	connexion_base_de_donnees = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password')
+except mysql.connector.Error as erreur_de_connexion_avec_db:
+	if erreur_de_connexion_avec_db.errno == errorcode.ER_ACCESS_DENIED_ERROR:	print("L'utilisateur ou le mot de passe n'est pas correct.")
+	elif erreur_de_connexion_avec_db.errno == errorcode.ER_BAD_DB_ERROR:	print("La base de données n'existe pas.")
+	else:	print(erreur_de_connexion_avec_db)			
 	exit()
 
-cursorSel = cnx.cursor()
+curseur_selection = connexion_base_de_donnees.cursor()
 #nbr total des personnes internes
-query = "SELECT COUNT(*) from personnesinternes" 
-cursorSel.execute(query)            
-res = cursorSel.fetchone()
+curseur_selection.execute("SELECT COUNT(*) from personnesinternes" )            
+res = curseur_selection.fetchone()
 nbr_total_personnes_internes = res[0] 
+curseur_selection.execute("SELECT date_presence FROM presencepersonnesinternes")
+recuperation_data_presence = curseur_selection.fetchall()
 
-cursorSel.execute("SELECT date_presence FROM presencepersonnesinternes")
-myresult = cursorSel.fetchall()
-
-for row in myresult:
+#Voir si l'initialisation a été faite
+for row in recuperation_data_presence:
 	a =  " | ".join(row)
-	if a == formatted_date: initialise = 1
+	if a == data_aujourdhui_formate: initialise = 1
   
 if initialise == 0:
 	#initialisation de la presence des pesonnes internes (presence = false)
 	for i in range(nbr_total_personnes_internes):
-		ajoutPresence = "INSERT INTO presencepersonnesinternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
-		val = (i,formatted_date,'0')
-		cursorSel.execute(ajoutPresence, val)
-		cnx.commit()
+		ajout_presence = "INSERT INTO presencepersonnesinternes (idpersonnesInterne, date_presence,present_e) VALUES (%s, %s,%s)"
+		informations_a_ajouter = (i,data_aujourdhui_formate,'0')
+		curseur_selection.execute(ajout_presence, informations_a_ajouter)
+		connexion_base_de_donnees.commit()
 								
-cursorSel.close()
-cnx.close()			
+curseur_selection.close()
+connexion_base_de_donnees.close()			
 
 #-----------------------------------------------IMPORTATION DES IMAGES-----------------------------------------------------#
 encodages_des_visages = []
@@ -63,15 +70,15 @@ noms = liste_des_fichiers.copy()
 #---------------------------------------------------FORMATION LES VISAGES--------------------------------------------------#
 #entrainement des images 
 for i in range(nombre_de_fichiers):
-    globals()['image_{}'.format(i)] = face_recognition.load_image_file(liste_des_fichiers[i])
-    globals()['image_encoding_{}'.format(i)] = face_recognition.face_encodings(globals()['image_{}'.format(i)])[0]
-    encodages_des_visages.append(globals()['image_encoding_{}'.format(i)])
-# création du tableau avec les noms connus
-    noms[i] = noms[i].replace(repertoire_courant, "")  
-    noms_des_visages.append(noms[i])
+	globals()['image_{}'.format(i)] = face_recognition.load_image_file(liste_des_fichiers[i])
+	globals()['image_encoding_{}'.format(i)] = face_recognition.face_encodings(globals()['image_{}'.format(i)])[0]
+	encodages_des_visages.append(globals()['image_encoding_{}'.format(i)])
+	# création du tableau avec les noms connus
+	noms[i] = noms[i].replace(repertoire_courant, "")  
+	noms_des_visages.append(noms[i])
 
 #connecter avec le bon port de l'arduino
-board = Arduino('/dev/ttyACM0')
+#board = Arduino('/dev/ttyACM0')
 
 #---------------------------------------------------RECONNAISSANCE DE VISAGE------------------------------------------------#
 emplacements_des_visages = []
@@ -80,8 +87,9 @@ noms_des_visages_captures = []
 traiter_ce_cadre = True
 video_capture = cv2.VideoCapture(0)
 
+#board.digital[13].write(0)
 while True:
-
+	#board.digital[13].write(0)
 	#saisir une seule image video
 	ret, frame = video_capture.read()
 	
@@ -100,7 +108,7 @@ while True:
 			noms_des_visages_captures = []
 			
 			#la phase de la comparaison - voir si le visage correspond à l'image actuelle de la vidéo
-			#pour comparer, le package utilise l'un des classificateurs SVM linéaires les plus courants des méthodes de la machine learning.
+			#pour comparer, le package utilise l'un des classificateurs SVM linéaires les plus courants des méthodes de la machine learning
 			#nous pouvons utiliser la fonction compare_faces pour savoir si les visages correspondent. Cette fonction renvoie Vrai ou Faux
 			#nous pouvons utiliser la fonction face_distance pour déterminer la probabilité que les visages correspondent en termes de nombres,utile lorsqu'il y a plusieurs visages à détecter
 			for encodage_visage_capture in encodages_des_visages_captes:
@@ -113,18 +121,16 @@ while True:
 					
 					#connexion avec la DB
 					try :
-						cnx = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password'
-						)
-					except mysql.connector.Error as err:
-						if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+						connexion_base_de_donnees = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password')
+					except mysql.connector.Error as erreur_de_connexion_avec_db:
+						if erreur_de_connexion_avec_db.errno == errorcode.ER_ACCESS_DENIED_ERROR:
 							print("L'utilsiateur ou le mot de passe n'est pas correct")
-						elif err.errno == errorcode.ER_BAD_DB_ERROR:
+						elif erreur_de_connexion_avec_db.errno == errorcode.ER_BAD_DB_ERROR:
 							print("La base de données n'existe pas")
 						else:
-							print(err)
+							print(erreur_de_connexion_avec_db)
 						
-						exit()
-						
+						exit()	
 
 					#reconnaitre l'id de la personne détectée
 					string1 = []
@@ -132,12 +138,12 @@ while True:
 					maxboucle=0
 					taille_de_nom_fichier=1
 					id_personne_interne=0
-					cursorSel = cnx.cursor()
+					curseur_selection = connexion_base_de_donnees.cursor()
 					nom_du_visage = noms_des_visages[indice_du_meilleur_visage_correspondant]
 					
 					selectAction = ("SELECT idpersonnesInternes, nom_du_fichier FROM personnesinternes")
-					cursorSel.execute(selectAction)
-					resultatSelect = cursorSel.fetchall()
+					curseur_selection.execute(selectAction)
+					resultatSelect = curseur_selection.fetchall()
 
 					for i in resultatSelect: 
 						for  c in i[1]:
@@ -157,24 +163,24 @@ while True:
 						maxboucle = 0
 						taille_de_nom_fichier = 1
 
-					print("ID de la personne détéctée : "+str(id_personne_interne))
+					print("la personne détéctée : "+ str(nom_du_visage) + ", ID: " + str(id_personne_interne))
 
 					#mise à jour de la bd dans le cas ou il y a une reconnaissance (exmemple ici: nom_du_visage)
 					sql = "UPDATE presencepersonnesinternes SET present_e = %s WHERE date_presence = %s AND idpersonnesInterne = %s "
-					value = ("1",formatted_date,id_personne_interne)
-					cursorSel.execute(sql,value)
-					cnx.commit()
+					value = ("1",data_aujourdhui_formate,id_personne_interne)
+					curseur_selection.execute(sql,value)
+					connexion_base_de_donnees.commit()
 
 					
-					cursorSel.close()
-					cnx.close()
-					board.digital[13].write(1)
+					curseur_selection.close()
+					connexion_base_de_donnees.close()
+					#board.digital[13].write(1)
 					
 				else:	
 					print("*************************************************");
 					print("Personne non autorisée à entrer dans le batiment, portes bloquées.");
 					print("*************************************************\n\n");
-					board.digital[13].write(0)
+					#board.digital[13].write(0)
 					
 				noms_des_visages_captures.append(nom_du_visage)
 			
@@ -200,6 +206,4 @@ while True:
 	cv2.imshow('Video', frame)
 	
 	# Appuyez sur « q » sur le clavier pour quitter !
-	if cv2.waitKey(1) & 0xFF == ord('q'):
-		break
-			
+	if cv2.waitKey(1) & 0xFF == ord('q'): break
