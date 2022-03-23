@@ -2,8 +2,8 @@
 
 #-------------------------------------------------------------------------------------------------------#
 #Ce fichier est destiné à la détection et la reconnaissance des peronnes internes au sein d'un établissment.
-#Il gére aussi leurs présences en utilisant une base de données SQL afin qu'elles puissenr etre visualisée 
-#via notre application web
+#Il gére aussi leurs présences en utilisant une base de données SQL afin qu'elles puissent etre visualisées 
+#via notre application web.
 #-------------------------------------------------------------------------------------------------------#
 
 import face_recognition
