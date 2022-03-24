@@ -1,7 +1,5 @@
 <?php
 
-	session_start();
-
     spl_autoload_register(function ($class_name) {
         include 'Classes/'. $class_name . '.php';
     });
@@ -75,7 +73,7 @@
 
 	<div class="container-contact100">
 		<div class="wrap-contact100">
-			<form action="actions/Add_demande.php" method="post" class="contact100-form validate-form">
+			<form action="actions/Add_demande.php" class="contact100-form validate-form" method="post" enctype="multipart/form-data"  role="form">
 				<span class="contact100-form-title">
 					Effectuer votre demande d'entrer à l'entreprise
 				</span>
