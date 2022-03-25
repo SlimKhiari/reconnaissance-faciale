@@ -1,3 +1,12 @@
+<!--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% le code du page : acceuil
+%
+% Auteur : Benslama Chahed (IATIC-4)
+%
+% Nom du projet : Reconnaissance faciale serrure connectÃ©e gestion prÃ©sences
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-->
 
 
 <!DOCTYPE html>
@@ -6,32 +15,16 @@
   <meta charset="UTF-8">
   <title>ISTY</title>
 <link rel="stylesheet" href="./style/style.css">
-
-
 </head>
 <body>
-
-
-
-
-
-
-    
-  
-    
-
-    <div id="page-wraper" >
-    
-      <!-- Sidebar Menu -->
       <div class="responsive-nav">
         <i class="fa fa-bars" id="menu-toggle"></i>
         <div id="menu" class="menu"> 
                   	<marquee bgcolor="orange" style="height:31px;"><a style="font-size:27px;">Bienvenue</a></marquee>
-        
           <i class="fa fa-times" id="menu-close"></i>
           <div class="container">
             <div class="image">
-          <a>  <img src="./images/logo-isty.jpg"/></a>
+          <a>  <img src="./images/logo-isty.jpg" style="width:330px;"/></a>
             </div>
             <div class="author-content">
               <h4>ISTY</h4>
@@ -40,30 +33,23 @@
             <nav class="main-nav" role="navigation">
               <ul class="main-menu">
                 <li><a href="">Acceuil</a></li>
-                <li><a href="/helloworld/Etudiant">Info etudiant</a></li>
-                <li><a href="/helloworld/visiteur">Visiteur</a></li>
+                <li><a href="/helloworld/Etudiant">Info etudiants</a></li>
+                <li><a href="/helloworld/visiteur">Visiteurs</a></li>
               </ul>
             </nav>
-          
-            
           </div>
         </div>
       </div>
 
       <section class="section about-me">
-       
-          
             <div class="section-heading" >
             <h2>Acceuil</h2>
             <div class="line-dec"></div>
-            <span><p style="font-size:21px;">Ce site web intranet est destiné a la scolarité pour consulter l'assiduité des étudiant avec leurs informations, aussi il permet de visualiser la liste des visiteurs avec leurs coordonnées .</p></span>
+            <span><p style="font-size:21px;">Ce site web intranet est destinÃ© a la scolaritÃ© pour consulter l'assiduitÃ© des Ã©tudiants avec leurs informations, aussi il permet de visualiser la liste des visiteurs avec leurs coordonnÃ©es .</p></span>
           </div>
          
        <div style="margin-left:460px;margin-top:80px;"> <img src="./images/etudiant.png" style="width:455px;height:320px;"></div> 
        <div style="margin-left:60px;margin-top:-293px;"><img src="./images/visiteur.png"style="width:310px;height:270px;"></div> 
-        
-              
-
         <div class="container">
           <div class="section-heading">
             <h2>Contact</h2>
@@ -113,16 +99,5 @@
           </div>
         </div>
       </section>
-    
-   
-
-  
-    
-
-
-
-
-
-
 </body>
 </html>
