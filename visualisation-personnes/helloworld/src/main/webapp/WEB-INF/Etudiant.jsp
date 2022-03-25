@@ -1,10 +1,21 @@
+<!--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% le code du page : etudiant
+%
+% Auteur : Benslama Chahed (IATIC-4)
+%
+% Nom du projet : Reconnaissance faciale serrure connectée gestion présences
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-->
+
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <title>Etudiant</title>
+    <title>Etudiants</title>
     <link href="./style/bootstrap.min.css" rel="stylesheet" />
 	<link rel="stylesheet" href="./style/style.css">
 	    
@@ -19,17 +30,17 @@
           <i class="fa fa-times" id="menu-close"></i>
           <div class="container">
             <div class="image">
-          <a>  <img src="./images/logo-isty.jpg"/></a>
+          <a>  <img src="./images/logo-isty.jpg" style="width:330px;"/></a>
             </div>
             <div class="author-content">
               <h4>ISTY</h4>
-              <span>Universite de Versailles Saint Quentin en Yvelines UVSQ</span>
+              <span><p style="font-size:15px;">Universite de Versailles Saint Quentin en Yvelines UVSQ</p></span>
             </div>
             <nav class="main-nav" role="navigation">
               <ul class="main-menu">
                 <li><a href="/helloworld/Acceuil">Acceuil</a></li>
-                <li><a href="/helloworld/Etudiant">Info etudiant</a></li>
-                <li><a href="/helloworld/visiteur">Visiteur</a></li>
+                <li><a href="/helloworld/Etudiant">Info etudiants</a></li>
+                <li><a href="/helloworld/visiteur">Visiteurs</a></li>
               </ul>
             </nav>
           
@@ -43,11 +54,11 @@
           
             <div class="section-heading">
           
-            <h2>Etudiant</h2>
+            <h2>Etudiants</h2>
             <div class="line-dec"></div>
             
 <form method="post" >
-<label><h5>chercher un personnel selon son ID</h5></label>
+<label><h5>Consulter l'assiduite d'un etudiant en saisissant son ID</h5></label>
 <input type="number" name="id"/>
 <input type="submit" value="rechercher"/>
 
@@ -117,19 +128,10 @@
 </c:forEach>
 </table>
 
-<br>
-            
-              
+<br>            
          
       </section>
 
-   
-
-     
-
-   
-
-  
     
   </body>
 </html>
