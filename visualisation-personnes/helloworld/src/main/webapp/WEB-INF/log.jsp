@@ -1,13 +1,23 @@
+<!--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% le code du page: login
+%
+% Auteur : Benslama Chahed (IATIC-4)
+%
+% Nom du projet : Reconnaissance faciale serrure connectée gestion présences
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-->
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 	<title>Login</title>
 	<meta charset="UTF-8">
-
-	<link rel="stylesheet" type="text/css" href="./fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-
 	<link rel="stylesheet" type="text/css" href="./css/util.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
+	<link rel="stylesheet" type="text/css" href="./fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+	
 </head>
 <body>
 	
@@ -39,37 +49,14 @@
 			</div>
 		</div>
 	</div>
-<%@page import="java.sql.DriverManager" %>
-<%@page import="java.sql.Connection" %>
-<%@page import="java.sql.Statement" %>
-<%@page import="java.sql.SQLException" %>
-<%@page import="java.sql.ResultSet" %>
+
 <%@page import="javax.swing.JOptionPane" %>
-
-
 <% 
-/* String l = (String)request.getAttribute("login");
-if (l=="1")
-{
- 	JOptionPane.showMessageDialog(null, "correcte", 
-             "Error Message",
-             JOptionPane.INFORMATION_MESSAGE);
- 	this.getServletContext().getRequestDispatcher("/WEB-INF/Acceuil.jsp").forward(request,response);
-}
-else
-{
-	JOptionPane.showMessageDialog(null, "Your Login and/or your Passeword are Incorrects", 
-            "Error Message",
-            JOptionPane.ERROR_MESSAGE); 
-}
-
-
-*/
 String email = request.getParameter("username");
 String pass = request.getParameter("pass");
 
 
-if (("chahed@gmail.com".equalsIgnoreCase(email))&&("1234".equalsIgnoreCase(pass)))
+if (("chahed2014@gmail.com".equalsIgnoreCase(email))&&("1234".equalsIgnoreCase(pass)))
 {
 	JOptionPane.showMessageDialog(null, "correcte", "Error Message",JOptionPane.INFORMATION_MESSAGE);
 	this.getServletContext().getRequestDispatcher("/WEB-INF/Acceuil.jsp").forward(request,response);
