@@ -1,4 +1,7 @@
 # reconnaissance-faciale
+
+NB: veuillez aller dans le dossier "les rendus" pour voir le rendu de chacun.
+
 C'est un gestionnaire d'abscence basé sur la reconaissance faciale en python (openCv). 
 Pour visualiser les abscences des étudiants et gérer leurs conséquences, nous avons dévellopé 1 application web en Java JEE , et 1 autre en PHP (pour les personnes visiteures qui auront donc une procédure de controle différente à celle des personnes inscrites dans l'établissment)  et MySQL. Pour ouvrir/fermer la serrure de la porte, nous avons utilisé une carte arduino avec la librairie pyfirmata pour python sur ubuntu. Pour la porte, nous avons effectué une conception mécanique avec le logiciel CATIA, ensuite l'imprimée en 3D.
 
