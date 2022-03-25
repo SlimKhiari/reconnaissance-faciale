@@ -15,10 +15,11 @@ import time
 import mysql.connector
 import pymysql
 pymysql.install_as_MySQLdb()
+import MySQLdb
 from mysql.connector import errorcode
 from datetime import datetime 
 from pyfirmata import Arduino
-import time
+from time import sleep
 
 #-----------------------------------------------INITIALISATION DE LA PRESENCE POUR L'ENSEMBLE DES PERSONNES INTERNES-----------------------------------------------------#
 initialise = 0;
@@ -27,13 +28,20 @@ date_aujourdhui = datetime.now()
 data_aujourdhui_formate = date_aujourdhui.strftime('%Y-%m-%d')
 					
 #Initialisation de l'appel (au départ tous le monde est abscent)
-try :
-	connexion_base_de_donnees = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password')
-except mysql.connector.Error as erreur_de_connexion_avec_db:
-	if erreur_de_connexion_avec_db.errno == errorcode.ER_ACCESS_DENIED_ERROR:	print("L'utilisateur ou le mot de passe n'est pas correct.")
-	elif erreur_de_connexion_avec_db.errno == errorcode.ER_BAD_DB_ERROR:	print("La base de données n'existe pas.")
-	else:	print(erreur_de_connexion_avec_db)			
-	exit()
+#try :
+	#connexion_base_de_donnees = mysql.connector.connect(user='root', password='Slim',host='localhost',database='pif',auth_plugin='mysql_native_password')
+
+
+#except mysql.connector.Error as erreur_de_connexion_avec_db:
+#	if erreur_de_connexion_avec_db.errno == errorcode.ER_ACCESS_DENIED_ERROR:	print("L'utilisateur ou le mot de passe n'est pas correct.")
+#	elif erreur_de_connexion_avec_db.errno == errorcode.ER_BAD_DB_ERROR:	print("La base de données n'existe pas.")
+#	else:	print(erreur_de_connexion_avec_db)			
+#	exit()
+connexion_base_de_donnees = None
+connexion_base_de_donnees = mysql.connector.connect(host='localhost',
+                                       database='pif',
+                                       user='root',
+                                       password='')
 
 curseur_selection = connexion_base_de_donnees.cursor()
 #nbr total des personnes internes
@@ -79,7 +87,7 @@ for i in range(nombre_de_fichiers):
 	noms_des_visages.append(noms[i])
 
 #connecter avec le bon port de l'arduino
-#board = Arduino('/dev/ttyACM0')
+board = Arduino('/dev/ttyACM0')
 
 #---------------------------------------------------RECONNAISSANCE DE VISAGE------------------------------------------------#
 emplacements_des_visages = []
@@ -113,26 +121,21 @@ while True:
 			#nous pouvons utiliser la fonction compare_faces pour savoir si les visages correspondent. Cette fonction renvoie Vrai ou Faux
 			#nous pouvons utiliser la fonction face_distance pour déterminer la probabilité que les visages correspondent en termes de nombres,utile lorsqu'il y a plusieurs visages à détecter
 			for encodage_visage_capture in encodages_des_visages_captes:
-			       
+				#éteindre les 2 diodes à chaque itération
+				board.digital[3].write(0)
+				board.digital[4].write(0)
 				correspondances = face_recognition.compare_faces (encodages_des_visages, encodage_visage_capture)
 				face_distances = face_recognition.face_distance(encodages_des_visages, encodage_visage_capture)
 				indice_du_meilleur_visage_correspondant = np.argmin(face_distances)
 				nom_du_visage="refuse(e)"
 				if correspondances[indice_du_meilleur_visage_correspondant ]:
 					
-					#connexion avec la DB
-					try :
-						connexion_base_de_donnees = mysql.connector.connect(user='root', password='Slimetsalambo123&',host='localhost',database='systeme_gestionnaire_abscence',auth_plugin='mysql_native_password')
-					except mysql.connector.Error as erreur_de_connexion_avec_db:
-						if erreur_de_connexion_avec_db.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-							print("L'utilsiateur ou le mot de passe n'est pas correct")
-						elif erreur_de_connexion_avec_db.errno == errorcode.ER_BAD_DB_ERROR:
-							print("La base de données n'existe pas")
-						else:
-							print(erreur_de_connexion_avec_db)
-						
-						exit()	
-
+					connexion_base_de_donnees = None
+					connexion_base_de_donnees = mysql.connector.connect(host='localhost',
+                                       database='pif',
+                                       user='root',
+                                       password='')
+                                       
 					#reconnaitre l'id de la personne détectée
 					string1 = []
 					string2 = []
@@ -175,13 +178,20 @@ while True:
 					
 					curseur_selection.close()
 					connexion_base_de_donnees.close()
-					#board.digital[13].write(1)
+					#ouvrir la serrure, attendre 5 secondes et la fermer + allumage de  la diode bleue
+					board.digital[7].write(1)
+					board.digital[4].write(1)
+					sleep(1)
+					board.digital[7].write(0)
 					
 				else:	
 					print("*************************************************");
 					print("Personne non autorisée à entrer dans le batiment, portes bloquées.");
 					print("*************************************************\n\n");
-					#board.digital[13].write(0)
+					#serrure fermée + allumage diode rouge
+					board.digital[3].write(1)
+					sleep(1)
+					board.digital[7].write(0)
 					
 				noms_des_visages_captures.append(nom_du_visage)
 			
