@@ -12,3 +12,5 @@ Pour visualiser les abscences des étudiants et gérer leurs conséquences, nous
   Slim : reconnaissance faciale avec python + opencv + MySQL
 
   Talha : conception de la base de données MySQL + assistance au frond end
+  
+  Wassim : la mise en place de la serrure automatique avec arduino + pyfirmata + cablage
