@@ -1,21 +1,13 @@
 
-
-
-
-/*//////////////////////////////////////////////////////////////////
-[ FONT ]*/
-
-@font-face {
-  font-family: Ubuntu-Regular;
-  src: url('../fonts/ubuntu/Ubuntu-Regular.ttf'); 
-}
-
-@font-face {
-  font-family: Ubuntu-Bold;
-  src: url('../fonts/ubuntu/Ubuntu-Bold.ttf'); 
-}
-
-
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% le code css du page login 
+%
+% Auteur : Benslama Chahed (IATIC-4)
+%
+% Nom du projet : Reconnaissance faciale serrure connectée gestion présences
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -31,6 +23,7 @@ body, html {
 	height: 100%;
 	font-family: Ubuntu-Regular, sans-serif;
 }
+
 
 /*---------------------------------------------*/
 a {
@@ -127,6 +120,26 @@ button:hover {
 iframe {
 	border: none !important;
 }
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ FONT ]*/
+
+
+
+
+@font-face {
+  font-family: Ubuntu-Regular;
+  src: url('../fonts/ubuntu/Ubuntu-Regular.ttf'); 
+}
+
+@font-face {
+  font-family: Ubuntu-Bold;
+  src: url('../fonts/ubuntu/Ubuntu-Bold.ttf'); 
+}
+
 
 
 /*//////////////////////////////////////////////////////////////////
